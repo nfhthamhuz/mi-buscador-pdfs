@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Digitalización | MichiganCFI</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Estilos personalizados -->
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --bancoppel-blue: #005baa;
+            --bancoppel-light: #e9f5ff;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+        }
+        
+        /* Header Styles */
+        .main-header {
+            height: var(--header-height);
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            z-index: 1030;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            background-color: var(--primary-color);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1020;
+            padding-top: 1rem;
+            overflow-y: auto;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            position: relative;
+        }
+        
+        .sidebar-menu li a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-menu li a:hover, 
+        .sidebar-menu li a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .sidebar-menu li i {
+            font-size: 1.2rem;
+            margin-right: 12px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-menu .menu-text {
+            flex-grow: 1;
+        }
+        
+        .sidebar-menu .badge {
+            position: absolute;
+            right: 20px;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            padding-top: calc(var(--header-height) + 2rem);
+            min-height: calc(100vh - var(--header-height));
+            transition: all 0.3s;
+        }
+        
+        /* User Dropdown Styles */
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 2px solid var(--accent-color);
+        }
+        
+        .notification-icon {
+            position: relative;
+            margin-right: 1.5rem;
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            cursor: pointer;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Form Styles */
+        .upload-area {
+            border: 2px dashed var(--accent-color);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 2rem;
+            background-color: var(--bancoppel-light);
+        }
+        
+        .upload-area:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+        
+        .document-preview {
+            max-height: 200px;
+            margin: 1rem 0;
+        }
+        
+        .metadata-form {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .progress {
+            height: 25px;
+            margin: 1rem 0;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: red;
+        }
+        
+        /* Table Styles */
+        .document-table th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Notification Styles */
+        .notification-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+        
+        .notification-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .notification-item.unread {
+            background-color: #f0f7ff;
+        }
+        
+        .notification-time {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        /* Recent Documents Styles */
+        .recent-docs {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 20px;
+        }
+        
+        .doc-card {
+            border-left: 3px solid var(--accent-color);
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.2s;
+        }
+        
+        .doc-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .sidebar-toggler {
+                display: block !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <button class="btn sidebar-toggler d-none me-3" type="button">
+            <i class="bi bi-list" style="font-size: 1.5rem;"></i>
+        </button>
+        
+        <a href="index.html" class="logo">
+            <i class="bi bi-book logo-icon"></i>
+            <span>MichiganCFI</span>
+        </a>
+        
+        <div class="user-dropdown">
+            <div class="notification-icon" id="notificationBell">
+                <i class="bi bi-bell"></i>
+                <span class="notification-badge" id="notificationCounter">0</span>
+            </div>
+            
+            <div class="dropdown">
+                <button class="btn dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://ui-avatars.com/api/?name=J+D&background=3498db&color=fff" alt="Usuario" class="user-avatar">
+                    <span class="d-none d-md-inline">Juan Domínguez</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><h6 class="dropdown-header">Rol: Administrador</h6></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="perfil.html"><i class="bi bi-person me-2"></i> Mi perfil</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i> Configuración</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="login.html"><i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li>
+                <a href="index.html">
+                    <i class="bi bi-house-door"></i>
+                    <span class="menu-text">Inicio</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="dashboard.html">
+                    <i class="bi bi-speedometer2"></i>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="centro-digitalizacion.html" class="active">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <span class="menu-text">Centro Digitalización</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="documentos-escaneados.html">
+                    <i class="bi bi-folder"></i>
+                    <span class="menu-text">Administración de Documentos</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="cursos.html">
+                    <i class="bi bi-journal-bookmark"></i>
+                    <span class="menu-text">Cursos</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="calificaciones.html">
+                    <i class="bi bi-graph-up"></i>
+                    <span class="menu-text">Calificaciones</span>
+                </a>
+            </li>
+            
+            <!-- Menú desplegable para administradores -->
+            <li class="mt-3">
+                <a data-bs-toggle="collapse" href="#adminMenu" role="button" aria-expanded="false">
+                    <i class="bi bi-shield-lock"></i>
+                    <span class="menu-text">Administración</span>
+                    <i class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <div class="collapse" id="adminMenu">
+                    <ul class="submenu">
+                        <li><a href="admin-cursos.html"><i class="bi bi-journal-plus"></i> Gestión de Cursos</a></li>
+                        <li><a href="administracion-contratos.html"><i class="bi bi-file-earmark-check"></i> Contratos</a></li>
+                        <li><a href="admin-usuarios.html"><i class="bi bi-people"></i> Usuarios</a></li>
+                    </ul>
+                </div>
+            </li>
+            
+            <li>
+                <a href="configuracion.html">
+                    <i class="bi bi-gear"></i>
+                    <span class="menu-text">Configuración</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container-fluid">
+            <div class="row mb-4">
+                <div class="col">
+                    <h2 class="fw-bold">Centro de Digitalización</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
+                            <li class="breadcrumb-item active">Centro Digitalización</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-4">
+                        <div class="card-header bg-white">
+                            <h5 class="fw-bold mb-0">Cargar Documento</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="uploadForm">
+                                <div class="mb-3">
+                                    <label for="documentName" class="form-label required-field">Nombre del Documento</label>
+                                    <input type="text" class="form-control" id="documentName" placeholder="Ej: Contrato de servicios 2023" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label required-field">Documento a digitalizar</label>
+                                    <div id="dropArea" class="upload-area">
+                                        <i class="bi bi-cloud-arrow-up fs-1 text-primary mb-3"></i>
+                                        <h5 id="uploadPrompt">Arrastra tu archivo aquí o haz clic para seleccionar</h5>
+                                        <p class="text-muted small">Formatos soportados: PDF, JPG, PNG (Max. 10MB)</p>
+                                        <input type="file" id="fileInput" class="d-none" accept=".pdf,.jpg,.jpeg,.png" required>
+                                        <div id="fileInfo" class="d-none mt-3">
+                                            <hr>
+                                            <h6 id="fileName" class="fw-bold"></h6>
+                                            <p class="small mb-0"><span id="fileType"></span> • <span id="fileSize"></span></p>
+                                            <img id="filePreview" class="document-preview img-fluid mt-2">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="documentCategory" class="form-label required-field">Tipo de Documento</label>
+                                    <select class="form-select" id="documentCategory" required>
+                                        <option value="">Seleccione un tipo...</option>
+                                        <option value="contrato">Contrato</option>
+                                        <option value="poder">Poder</option>
+                                        <option value="acta">Acta</option>
+                                        <option value="anexo">Anexo</option>
+                                        <option value="biblioteca">Biblioteca</option>
+                                        <option value="identificacion">Documento de Identificación</option>
+                                        <option value="reporte">Reporte</option>
+                                        <option value="pagar">Pagaré</option>
+                                        <option value="financiero">Documento Financiero</option>
+                                        <option value="otro">Otro</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Sección para CONTRATO -->
+                                <div id="contrato-section" class="dynamic-form-section mb-3" style="display: none;">
+                                    <h5><i class="bi bi-file-earmark-text"></i> Información del Contrato</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fecha-contrato" class="form-label required-field">Fecha del Contrato</label>
+                                            <input type="date" class="form-control" id="fecha-contrato" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tipo-contrato" class="form-label required-field">Tipo de Contrato</label>
+                                            <select id="tipo-contrato" class="form-select" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="servicios">Prestación de Servicios</option>
+                                                <option value="arrendamiento">Arrendamiento</option>
+                                                <option value="compraventa">Compraventa</option>
+                                                <option value="confidencialidad">Confidencialidad</option>
+                                                <option value="credito_simple">Crédito Simple</option>
+                                                <option value="credito_cuenta_corriente">Crédito en Cuenta Corriente</option>
+                                                <option value="credito_revolvente">Crédito Revolvente Amortizado con Vencimiento</option>
+                                                <option value="factoraje">Factoraje Financiero</option>
+                                                <option value="arrendamiento_financiero">Arrendamiento Financiero</option>
+                                                <option value="financiamiento_pedidos">Financiamiento de Pedidos</option>
+                                                <option value="credito_arrendadores">Crédito Arrendadores</option>
+                                                <option value="otro">Otro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div id="otro-tipo-contrato-container" class="mb-3 d-none">
+                                        <label for="otro-tipo-contrato" class="form-label required-field">Especificar tipo de contrato</label>
+                                        <input type="text" class="form-control" id="otro-tipo-contrato" required>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="contraparte" class="form-label required-field">Contraparte</label>
+                                            <input type="text" class="form-control" id="contraparte" placeholder="Nombre de la contraparte" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="representante" class="form-label">Representante Legal</label>
+                                            <input type="text" class="form-control" id="representante" placeholder="Opcional">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sección para PODER -->
+                                <div id="poder-section" class="dynamic-form-section mb-3" style="display: none;">
+                                    <h5><i class="bi bi-file-earmark-text"></i> Información del Poder</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fecha-poder" class="form-label required-field">Fecha del Poder</label>
+                                            <input type="date" class="form-control" id="fecha-poder" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="accion-poder" class="form-label required-field">Acción</label>
+                                            <select id="accion-poder" class="form-select" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="otorgamiento">Otorgamiento</option>
+                                                <option value="revocacion">Revocación</option>
+                                                <option value="modificacion">Modificación</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="notario-poder" class="form-label">Notario</label>
+                                        <input type="text" class="form-control" id="notario-poder" placeholder="Opcional">
+                                    </div>
+                                </div>
+
+                                <!-- Sección para ACTA -->
+                                <div id="acta-section" class="dynamic-form-section mb-3" style="display: none;">
+                                    <h5><i class="bi bi-file-earmark-text"></i> Información del Acta</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fecha-acta" class="form-label required-field">Fecha del Acta</label>
+                                            <input type="date" class="form-control" id="fecha-acta" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tipo-acta" class="form-label required-field">Tipo de Acta</label>
+                                            <select id="tipo-acta" class="form-select" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="asamblea">Asamblea</option>
+                                                <option value="consejo">Consejo Directivo</option>
+                                                <option value="reunion">Reunión</option>
+                                                <option value="otro">Otro</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sección para ANEXO -->
+                                <div id="anexo-section" class="dynamic-form-section mb-3" style="display: none;">
+                                    <h5><i class="bi bi-file-earmark-text"></i> Información del Anexo</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="contrato-relacionado" class="form-label required-field">Contrato Relacionado</label>
+                                            <input type="text" class="form-control" id="contrato-relacionado" placeholder="Número o referencia del contrato" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fecha-anexo" class="form-label required-field">Fecha del Anexo</label>
+                                            <input type="date" class="form-control" id="fecha-anexo" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descripcion-anexo" class="form-label">Descripción</label>
+                                        <textarea class="form-control" id="descripcion-anexo" rows="2" placeholder="Breve descripción del anexo"></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Sección para BIBLIOTECA -->
+                                <div id="biblioteca-section" class="dynamic-form-section mb-3" style="display: none;">
+                                    <h5><i class="bi bi-book"></i> Información de Biblioteca</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="autor-biblioteca" class="form-label required-field">Autor(es)</label>
+                                            <input type="text" class="form-control" id="autor-biblioteca" placeholder="Nombre del autor o autores" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="editorial-biblioteca" class="form-label">Editorial</label>
+                                            <input type="text" class="form-control" id="editorial-biblioteca" placeholder="Nombre de la editorial">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fecha-edicion-biblioteca" class="form-label">Fecha de Edición</label>
+                                            <input type="date" class="form-control" id="fecha-edicion-biblioteca">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tema-biblioteca" class="form-label required-field">Tema/Área</label>
+                                            <select id="tema-biblioteca" class="form-select" required>
+                                                <option value="">Seleccione un tema...</option>
+                                                <option value="administracion">Administración</option>
+                                                <option value="derecho">Derecho</option>
+                                                <option value="educacion">Educación</option>
+                                                <option value="finanzas">Finanzas</option>
+                                                <option value="tecnologia">Tecnología</option>
+                                                <option value="otros">Otros</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="isbn-biblioteca" class="form-label">ISBN/Identificador</label>
+                                        <input type="text" class="form-control" id="isbn-biblioteca" placeholder="Opcional">
+                                    </div>
+                                </div>
+
+                                <!-- Sección para DOCUMENTO DE IDENTIFICACIÓN -->
+                                <div id="identificacion-section" class="dynamic-form-section mb-3" style="display: none;">
+                                    <h5><i class="bi bi-person-badge"></i> Información de Identificación</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tipo-identificacion" class="form-label required-field">Tipo de Identificación</label>
+                                            <select id="tipo-identificacion" class="form-select" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="ine">INE/IFE</option>
+                                                <option value="pasaporte">Pasaporte</option>
+                                                <option value="licencia">Licencia de Conducir</option>
+                                                <option value="cedula">Cédula Profesional</option>
+                                                <option value="otro">Otro</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="numero-identificacion" class="form-label required-field">Número</label>
+                                            <input type="text" class="form-control" id="numero-identificacion" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="nombre-identificacion" class="form-label required-field">Nombre Completo</label>
+                                            <input type="text" class="form-control" id="nombre-identificacion" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="vigencia-identificacion" class="form-label">Fecha de Vigencia</label>
+                                            <input type="date" class="form-control" id="vigencia-identificacion">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sección para REPORTE -->
+                                <div id="reporte-section" class="dynamic-form-section mb-3" style="display: none;">
+                                    <h5><i class="bi bi-file-earmark-bar-graph"></i> Información del Reporte</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tipo-reporte" class="form-label required-field">Tipo de Reporte</label>
+                                            <select id="tipo-reporte" class="form-select" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="financiero">Financiero</option>
+                                                <option value="operativo">Operativo</option>
+                                                <option value="ventas">Ventas</option>
+                                                <option value="inventario">Inventario</option>
+                                                <option value="otro">Otro</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="periodo-reporte" class="form-label required-field">Periodo</label>
+                                            <input type="text" class="form-control" id="periodo-reporte" placeholder="Ej: Enero 2023" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descripcion-reporte" class="form-label required-field">Descripción</label>
+                                        <textarea class="form-control" id="descripcion-reporte" rows="2" required></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Sección para PAGARÉ -->
+                                <div id="pagar-section" class="dynamic-form-section mb-3" style="display: none;">
+                                    <h5><i class="bi bi-file-earmark-text"></i> Información del Pagaré</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fecha-pagar" class="form-label required-field">Fecha</label>
+                                            <input type="date" class="form-control" id="fecha-pagar" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="monto-pagar" class="form-label required-field">Monto</label>
+                                            <input type="number" step="0.01" class="form-control" id="monto-pagar" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="suscribente-pagar" class="form-label required-field">Suscribente</label>
+                                            <input type="text" class="form-control" id="suscribente-pagar" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="vencimiento-pagar" class="form-label required-field">Fecha de Vencimiento</label>
+                                            <input type="date" class="form-control" id="vencimiento-pagar" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Sección para DOCUMENTO FINANCIERO -->
+                                <div id="financiero-section" class="dynamic-form-section mb-3" style="display: none;">
+                                    <h5><i class="bi bi-cash-stack"></i> Información del Documento Financiero</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="tipo-financiero" class="form-label required-field">Tipo</label>
+                                            <select id="tipo-financiero" class="form-select" required>
+                                                <option value="">Seleccione...</option>
+                                                <option value="estado_cuenta">Estado de Cuenta</option>
+                                                <option value="factura">Factura</option>
+                                                <option value="recibo">Recibo</option>
+                                                <option value="comprobante">Comprobante</option>
+                                                <option value="otro">Otro</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fecha-financiero" class="form-label required-field">Fecha</label>
+                                            <input type="date" class="form-control" id="fecha-financiero" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="descripcion-financiero" class="form-label required-field">Descripción</label>
+                                        <textarea class="form-control" id="descripcion-financiero" rows="2" required></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Sección para OTRO -->
+                                <div id="otro-section" class="dynamic-form-section mb-3" style="display: none;">
+                                    <h5><i class="bi bi-file-earmark-text"></i> Información del Documento</h5>
+                                    <div class="mb-3">
+                                        <label for="descripcion-documento" class="form-label required-field">Descripción</label>
+                                        <textarea class="form-control" id="descripcion-documento" rows="3" placeholder="Describa el documento" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="fecha-documento" class="form-label">Fecha del Documento</label>
+                                        <input type="date" class="form-control" id="fecha-documento">
+                                    </div>
+                                </div>
+                                
+                                <div id="progressContainer" class="d-none">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <small>Progreso de digitalización</small>
+                                        <small id="progressPercent">0%</small>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 8px;">
+                                        <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                             role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <p id="uploadStatus" class="text-center mb-0">Preparando para subir...</p>
+                                </div>
+                                
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                                        <i class="bi bi-cloud-arrow-up me-2"></i> Digitalizar Documento
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="stat-card">
+                        <i class="bi bi-archive fs-1 text-primary mb-3"></i>
+                        <h3 class="stat-number" id="totalDocs">0</h3>
+                        <p class="mb-0">Documentos digitalizados</p>
+                    </div>
+                    
+                    <div class="recent-docs">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="h5 mb-0"><i class="bi bi-clock-history me-2"></i>Documentos recientes</h3>
+                            <a href="documentos-escaneados.html" class="btn btn-sm btn-outline-primary">Ver todos</a>
+                        </div>
+                        
+                        <div id="recentDocuments">
+                            <div class="empty-state">
+                                <i class="bi bi-folder-x fs-1"></i>
+                                <p class="mt-3 mb-0">No hay documentos recientes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de documentos cargados -->
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Documentos Cargados</h2>
+                    <div class="table-responsive">
+                        <table class="table table-bordered document-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del Documento</th>
+                                    <th>Tipo</th>
+                                    <th>Fecha de Carga</th>
+                                    <th>Ubicación</th>
+                                    <th>Detalles</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-documentos">
+                                <!-- Documentos se cargarán aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal para ver detalles -->
+    <div class="modal fade" id="detalleDocumentoModal" tabindex="-1" aria-labelledby="detalleDocumentoModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalleDocumentoModalLabel">Detalles del Documento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detalle-documento">
+                    <!-- Contenido dinámico -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="descargarDocumento">
+                        <i class="bi bi-download"></i> Descargar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de notificaciones -->
+    <div class="modal fade" id="notificacionesModal" tabindex="-1" aria-labelledby="notificacionesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificacionesModalLabel">Notificaciones</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="notificacionesContenido">
+                    <!-- Notificaciones se cargarán aquí -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-outline-danger" id="limpiarNotificaciones">
+                        <i class="bi bi-trash"></i> Limpiar todas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Script personalizado -->
+    <!-- Al final del documento, antes del cierre de </body> -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Todo el código JavaScript que te proporcionédocument.addEventListener('DOMContentLoaded', function() {
+    // Seleccionar el formulario (ajusta el selector según tu HTML)
+    const form = document.querySelector('form');
+    
+    if (form) {
+        // Manejar el evento submit para validar manualmente
+        form.addEventListener('submit', function(e) {
+            // Validar todos los campos requeridos
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                    
+                    // Hacer scroll al primer campo inválido
+                    if (isValid === false) {
+                        field.focus();
+                        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Por favor complete todos los campos requeridos.');
+            }
+        });
+        
+        // Agregar validación en tiempo real
+        const fields = form.querySelectorAll('input, textarea, select');
+        fields.forEach(field => {
+            field.addEventListener('input', function() {
+                if (this.hasAttribute('required') && this.value.trim()) {
+                    this.classList.remove('is-invalid');
+                }
+            });
+            
+            field.addEventListener('blur', function() {
+                if (this.hasAttribute('required') && !this.value.trim()) {
+                    this.classList.add('is-invalid');
+                }
+            });
+        });
+    }
+    
+    // Asegurarse de que todos los campos requeridos tengan name (opcional pero recomendado)
+    document.querySelectorAll('[required]').forEach(el => {
+        if (!el.hasAttribute('name')) {
+            el.setAttribute('name', el.id || `required-field-${Math.random().toString(36).substr(2, 5)}`);
+        }
+    });
+});
+        // Copia aquí todo el contenido desde "const form = document.querySelector('form');"
+        // hasta el último cierre de llaves
+   
+    </script>
+    <script>
+        // Variables globales
+        let selectedFile = null;
+        let documentos = [];
+        let notificaciones = [];
+        
+        // Cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle sidebar en móvil
+            document.querySelector('.sidebar-toggler').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('active');
+            });
+            
+            // Mostrar/ocultar secciones según tipo de documento
+            document.getElementById('documentCategory').addEventListener('change', function() {
+                // Ocultar todas las secciones primero
+                document.querySelectorAll('.dynamic-form-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Mostrar solo la sección correspondiente
+                const selectedType = this.value;
+                if (selectedType) {
+                    document.getElementById(`${selectedType}-section`).style.display = 'block';
+                }
+            });
+            
+            // Mostrar campo para "Otro" tipo de contrato cuando se seleccione
+            document.getElementById('tipo-contrato').addEventListener('change', function() {
+                const otroTipoContratoContainer = document.getElementById('otro-tipo-contrato-container');
+                if (this.value === 'otro') {
+                    otroTipoContratoContainer.classList.remove('d-none');
+                    document.getElementById('otro-tipo-contrato').required = true;
+                } else {
+                    otroTipoContratoContainer.classList.add('d-none');
+                    document.getElementById('otro-tipo-contrato').required = false;
+                }
+            });
+            
+            // Inicializar datos y UI
+            initData();
+            updateStats();
+            loadRecentDocuments();
+            loadAllDocuments();
+            actualizarContadorNotificaciones();
+            
+            // Configurar el área de drop
+            const dropArea = document.getElementById('dropArea');
+            const fileInput = document.getElementById('fileInput');
+            
+            // Manejar clic en el área de drop
+            dropArea.addEventListener('click', () => fileInput.click());
+            
+            // Manejar cambio de archivo seleccionado
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length) {
+                    handleFileSelection(e.target.files[0]);
+                }
+            });
+            
+            // Manejar drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.style.backgroundColor = '#d8ebff';
+            }
+            
+            function unhighlight() {
+                dropArea.style.backgroundColor = '#e9f5ff';
+            }
+            
+            dropArea.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const file = dt.files[0];
+                if (file) handleFileSelection(file);
+            });
+            
+            // Manejar envío del formulario
+            document.getElementById('uploadForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                uploadDocument();
+            });
+            
+            // Evento para mostrar notificaciones
+            document.getElementById('notificationBell').addEventListener('click', mostrarNotificaciones);
+            
+            // Evento para limpiar notificaciones
+            document.getElementById('limpiarNotificaciones').addEventListener('click', function() {
+                notificaciones = [];
+                actualizarContadorNotificaciones();
+                document.getElementById('notificacionesContenido').innerHTML = '<p class="text-center text-muted">No hay notificaciones</p>';
+            });
+        });
+        
+        // Función para simular el guardado en la carpeta "biblioteca"
+        function guardarEnBiblioteca(documento) {
+            // En una implementación real, aquí iría una llamada AJAX al servidor
+            console.log(`Documento guardado en carpeta "biblioteca": ${documento.name}`);
+            
+            // Simulamos un retraso de red
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    // Añadir a la lista de documentos
+                    documentos.unshift(documento);
+                    
+                    // Crear notificación
+                    const nuevaNotificacion = {
+                        id: 'notif-' + Date.now(),
+                        tipo: 'documento',
+                        mensaje: `Nuevo documento cargado: ${documento.name}`,
+                        fecha: new Date().toISOString(),
+                        leida: false,
+                        documentoId: documento.id
+                    };
+                    
+                    notificaciones.unshift(nuevaNotificacion);
+                    resolve();
+                }, 1000);
+            });
+        }
+
+        // Función para inicializar datos de ejemplo
+        function initData() {
+            const fechaEjemplo = new Date();
+            fechaEjemplo.setDate(fechaEjemplo.getDate() - 1);
+            
+            documentos = [
+                {
+                    id: 'doc-1',
+                    name: 'Contrato_Servicios_2023-001',
+                    fileName: 'Contrato_Servicios_2023-001.pdf',
+                    type: 'application/pdf',
+                    size: 245678,
+                    category: 'contrato',
+                    date: fechaEjemplo.toLocaleString('es-MX', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }),
+                    ubicacion: 'biblioteca',
+                    detalles: {
+                        fecha: '2023-01-15',
+                        tipo: 'Prestación de Servicios',
+                        contraparte: 'Empresa XYZ',
+                        representante: 'Juan Pérez'
+                    }
+                },
+                {
+                    id: 'doc-2',
+                    name: 'INE_Juan_Perez',
+                    fileName: 'INE_Juan_Perez.jpg',
+                    type: 'image/jpeg',
+                    size: 345678,
+                    category: 'identificacion',
+                    date: new Date().toLocaleString('es-MX', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }),
+                    ubicacion: 'biblioteca',
+                    detalles: {
+                        tipo: 'INE/IFE',
+                        numero: '1234567890',
+                        nombre: 'Juan Pérez Domínguez',
+                        vigencia: '2030-12-31'
+                    }
+                }
+            ];
+            
+            notificaciones = [
+                {
+                    id: 'notif-1',
+                    tipo: 'documento',
+                    mensaje: 'Nuevo documento cargado en biblioteca: INE_Juan_Perez.jpg',
+                    fecha: new Date().toISOString(),
+                    leida: false,
+                    documentoId: 'doc-2'
+                },
+                {
+                    id: 'notif-2',
+                    tipo: 'documento',
+                    mensaje: 'Nuevo documento cargado en biblioteca: Contrato_Servicios_2023-001.pdf',
+                    fecha: fechaEjemplo.toISOString(),
+                    leida: true,
+                    documentoId: 'doc-1'
+                }
+            ];
+        }
+        
+        // Función para manejar la selección de archivo
+        function handleFileSelection(file) {
+            // Validar tipo de archivo
+            const validTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                alert('Error: Solo se permiten archivos PDF, JPG o PNG');
+                return;
+            }
+            
+            // Validar tamaño (10MB máximo)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('Error: El archivo es demasiado grande (máximo 10MB)');
+                return;
+            }
+            
+            selectedFile = file;
+            
+            // Mostrar información del archivo
+            document.getElementById('uploadPrompt').classList.add('d-none');
+            document.getElementById('fileInfo').classList.remove('d-none');
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileType').textContent = file.type.split('/')[1].toUpperCase();
+            document.getElementById('fileSize').textContent = formatFileSize(file.size);
+            
+            // Mostrar vista previa si es imagen
+            const preview = document.getElementById('filePreview');
+            if (file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '';
+            }
+            
+            // Habilitar botón de subir
+            document.getElementById('submitBtn').disabled = false;
+        }
+        
+        // Función para subir el documento
+        function uploadDocument() {
+            if (!selectedFile) {
+                alert('Por favor seleccione un archivo para cargar');
+                return;
+            }
+            
+            const documentName = document.getElementById('documentName').value.trim();
+            if (!documentName) {
+                alert('Por favor ingresa un nombre para el documento');
+                return;
+            }
+            
+            const category = document.getElementById('documentCategory').value;
+            if (!category) {
+                alert('Por favor selecciona una categoría para el documento');
+                return;
+            }
+            
+            // Validar campos requeridos según el tipo de documento
+            let isValid = true;
+            let errorMessage = '';
+            let datosEspecificos = {};
+            
+            switch(category) {
+                case 'contrato':
+                    datosEspecificos = {
+                        fecha: document.getElementById('fecha-contrato').value,
+                        tipo: document.getElementById('tipo-contrato').value === 'otro' ? 
+                              document.getElementById('otro-tipo-contrato').value : 
+                              document.getElementById('tipo-contrato').value,
+                        contraparte: document.getElementById('contraparte').value,
+                        representante: document.getElementById('representante').value
+                    };
+                    
+                    if (!datosEspecificos.fecha || !datosEspecificos.tipo || !datosEspecificos.contraparte) {
+                        isValid = false;
+                        errorMessage = 'Por favor complete los campos requeridos para Contrato';
+                    }
+                    if (document.getElementById('tipo-contrato').value === 'otro' && !document.getElementById('otro-tipo-contrato').value) {
+                        isValid = false;
+                        errorMessage = 'Por favor especifique el tipo de contrato';
+                    }
+                    break;
+                    
+                case 'poder':
+                    datosEspecificos = {
+                        fecha: document.getElementById('fecha-poder').value,
+                        accion: document.getElementById('accion-poder').value,
+                        notario: document.getElementById('notario-poder').value
+                    };
+                    
+                    if (!datosEspecificos.fecha || !datosEspecificos.accion) {
+                        isValid = false;
+                        errorMessage = 'Por favor complete los campos requeridos para Poder';
+                    }
+                    break;
+                    
+                case 'acta':
+                    datosEspecificos = {
+                        fecha: document.getElementById('fecha-acta').value,
+                        tipo: document.getElementById('tipo-acta').value
+                    };
+                    
+                    if (!datosEspecificos.fecha || !datosEspecificos.tipo) {
+                        isValid = false;
+                        errorMessage = 'Por favor complete los campos requeridos para Acta';
+                    }
+                    break;
+                    
+                case 'anexo':
+                    datosEspecificos = {
+                        contratoRelacionado: document.getElementById('contrato-relacionado').value,
+                        fecha: document.getElementById('fecha-anexo').value,
+                        descripcion: document.getElementById('descripcion-anexo').value
+                    };
+                    
+                    if (!datosEspecificos.contratoRelacionado || !datosEspecificos.fecha) {
+                        isValid = false;
+                        errorMessage = 'Por favor complete los campos requeridos para Anexo';
+                    }
+                    break;
+                    
+                case 'biblioteca':
+                    datosEspecificos = {
+                        autor: document.getElementById('autor-biblioteca').value,
+                        editorial: document.getElementById('editorial-biblioteca').value,
+                        fechaEdicion: document.getElementById('fecha-edicion-biblioteca').value,
+                        tema: document.getElementById('tema-biblioteca').value,
+                        isbn: document.getElementById('isbn-biblioteca').value
+                    };
+                    
+                    if (!datosEspecificos.autor || !datosEspecificos.tema) {
+                        isValid = false;
+                        errorMessage = 'Por favor complete los campos requeridos para Biblioteca';
+                    }
+                    break;
+                    
+                case 'identificacion':
+                    datosEspecificos = {
+                        tipo: document.getElementById('tipo-identificacion').value,
+                        numero: document.getElementById('numero-identificacion').value,
+                        nombre: document.getElementById('nombre-identificacion').value,
+                        vigencia: document.getElementById('vigencia-identificacion').value
+                    };
+                    
+                    if (!datosEspecificos.tipo || !datosEspecificos.numero || !datosEspecificos.nombre) {
+                        isValid = false;
+                        errorMessage = 'Por favor complete los campos requeridos para Documento de Identificación';
+                    }
+                    break;
+                    
+                case 'reporte':
+                    datosEspecificos = {
+                        tipo: document.getElementById('tipo-reporte').value,
+                        periodo: document.getElementById('periodo-reporte').value,
+                        descripcion: document.getElementById('descripcion-reporte').value
+                    };
+                    
+                    if (!datosEspecificos.tipo || !datosEspecificos.periodo || !datosEspecificos.descripcion) {
+                        isValid = false;
+                        errorMessage = 'Por favor complete los campos requeridos para Reporte';
+                    }
+                    break;
+                    
+                case 'pagar':
+                    datosEspecificos = {
+                        fecha: document.getElementById('fecha-pagar').value,
+                        monto: document.getElementById('monto-pagar').value,
+                        suscribente: document.getElementById('suscribente-pagar').value,
+                        vencimiento: document.getElementById('vencimiento-pagar').value
+                    };
+                    
+                    if (!datosEspecificos.fecha || !datosEspecificos.monto || !datosEspecificos.suscribente || !datosEspecificos.vencimiento) {
+                        isValid = false;
+                        errorMessage = 'Por favor complete los campos requeridos para Pagaré';
+                    }
+                    break;
+                    
+                case 'financiero':
+                    datosEspecificos = {
+                        tipo: document.getElementById('tipo-financiero').value,
+                        fecha: document.getElementById('fecha-financiero').value,
+                        descripcion: document.getElementById('descripcion-financiero').value
+                    };
+                    
+                    if (!datosEspecificos.tipo || !datosEspecificos.fecha || !datosEspecificos.descripcion) {
+                        isValid = false;
+                        errorMessage = 'Por favor complete los campos requeridos para Documento Financiero';
+                    }
+                    break;
+                    
+                case 'otro':
+                    datosEspecificos = {
+                        descripcion: document.getElementById('descripcion-documento').value,
+                        fecha: document.getElementById('fecha-documento').value
+                    };
+                    
+                    if (!datosEspecificos.descripcion) {
+                        isValid = false;
+                        errorMessage = 'Por favor complete la descripción del documento';
+                    }
+                    break;
+            }
+            
+            if (!isValid) {
+                alert(errorMessage);
+                return;
+            }
+            
+            // Mostrar progreso
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            const uploadStatus = document.getElementById('uploadStatus');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            progressContainer.classList.remove('d-none');
+            submitBtn.disabled = true;
+            uploadStatus.textContent = "Preparando para subir...";
+            
+            // Crear objeto documento
+            const documentData = {
+                id: 'doc-' + Date.now(),
+                name: documentName,
+                fileName: selectedFile.name,
+                type: selectedFile.type,
+                size: selectedFile.size,
+                category: category,
+                date: new Date().toLocaleString('es-MX', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                ubicacion: 'biblioteca',
+                detalles: datosEspecificos
+            };
+            
+            // Simular progreso de carga
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+                
+                progressBar.style.width = `${progress}%`;
+                progressPercent.textContent = `${Math.round(progress)}%`;
+                
+                // Actualizar mensaje de estado
+                if (progress < 30) {
+                    uploadStatus.textContent = "Analizando documento...";
+                } else if (progress < 60) {
+                    uploadStatus.textContent = "Preparando para guardar en biblioteca...";
+                } else if (progress < 90) {
+                    uploadStatus.textContent = "Guardando en carpeta biblioteca...";
+                } else {
+                    uploadStatus.textContent = "Finalizando proceso...";
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    uploadStatus.textContent = "¡Documento digitalizado con éxito!";
+                    
+                    // Guardar en la "biblioteca" (simulado)
+                    guardarEnBiblioteca(documentData).then(() => {
+                        // Actualizar la interfaz
+                        updateStats();
+                        loadRecentDocuments();
+                        loadAllDocuments();
+                        
+                        // Resetear formulario
+                        resetForm();
+                        
+                        // Mostrar alerta de éxito
+                        const alerta = document.createElement('div');
+                        alerta.className = 'alert alert-success alert-dismissible fade show';
+                        alerta.role = 'alert';
+                        alerta.innerHTML = `
+                            <strong>¡Éxito!</strong> El documento ha sido guardado en la biblioteca.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        `;
+                        document.querySelector('.container-fluid').prepend(alerta);
+                        
+                        // Cerrar automáticamente después de 5 segundos
+                        setTimeout(() => {
+                            const bsAlert = new bootstrap.Alert(alerta);
+                            bsAlert.close();
+                        }, 5000);
+                    });
+                }
+            }, 300);
+        }
+        
+        // Función para resetear el formulario
+        function resetForm() {
+            document.getElementById('uploadForm').reset();
+            document.getElementById('uploadPrompt').classList.remove('d-none');
+            document.getElementById('fileInfo').classList.add('d-none');
+            document.getElementById('progressContainer').classList.add('d-none');
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('progressBar').style.width = '0%';
+            selectedFile = null;
+            
+            // Ocultar todas las secciones de formulario
+            document.querySelectorAll('.dynamic-form-section').forEach(section => {
+                section.style.display = 'none';
+            });
+        }
+        
+        // Función para actualizar estadísticas
+        function updateStats() {
+            document.getElementById('totalDocs').textContent = documentos.length;
+        }
+        
+        // Función para cargar documentos recientes
+        function loadRecentDocuments() {
+            const recentContainer = document.getElementById('recentDocuments');
+            
+            if (documentos.length === 0) {
+                recentContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="bi bi-folder-x fs-1"></i>
+                        <p class="mt-3 mb-0">No hay documentos recientes</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            recentContainer.innerHTML = '';
+            const recentDocs = documentos.slice(0, 3); // Mostrar solo los 3 más recientes
+            
+            recentDocs.forEach(doc => {
+                const icon = doc.type.startsWith('image/') ? 'bi-image' : 
+                             doc.type === 'application/pdf' ? 'bi-file-earmark-pdf' : 'bi-file-earmark';
+                
+                recentContainer.innerHTML += `
+                    <div class="doc-card">
+                        <div class="d-flex align-items-start">
+                            <i class="bi ${icon} fs-4 text-primary me-3"></i>
+                            <div>
+                                <h6 class="mb-1">${doc.name}</h6>
+                                <p class="small text-muted mb-1">
+                                    <i class="bi bi-calendar me-1"></i> ${doc.date}
+                                </p>
+                                <p class="small text-muted mb-0">
+                                    <i class="bi bi-tag me-1"></i> ${getCategoryName(doc.category)}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        // Función para cargar todos los documentos en la tabla
+        function loadAllDocuments() {
+            const tablaDocumentos = document.getElementById('tabla-documentos');
+            tablaDocumentos.innerHTML = '';
+            
+            documentos.forEach(doc => {
+                let icon = doc.type.startsWith('image/') ? 'bi-image' : 
+                          doc.type === 'application/pdf' ? 'bi-file-earmark-pdf' : 'bi-file-earmark';
+                
+                let detalles = '';
+                switch(doc.category) {
+                    case 'contrato':
+                        detalles = `Contraparte: ${doc.detalles.contraparte}`;
+                        if (doc.detalles.representante) {
+                            detalles += `, Representante: ${doc.detalles.representante}`;
+                        }
+                        break;
+                    case 'identificacion':
+                        detalles = `Tipo: ${doc.detalles.tipo}, Número: ${doc.detalles.numero}`;
+                        break;
+                    case 'pagar':
+                        detalles = `Suscribente: ${doc.detalles.suscribente}, Monto: $${doc.detalles.monto}`;
+                        break;
+                    default:
+                        detalles = doc.category.charAt(0).toUpperCase() + doc.category.slice(1);
+                }
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${doc.name}</td>
+                    <td>${getCategoryName(doc.category)}</td>
+                    <td>${doc.date}</td>
+                    <td>${doc.ubicacion || 'biblioteca'}</td>
+                    <td>${detalles}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary" onclick="mostrarDetalles('${doc.id}')">
+                            <i class="bi bi-eye"></i> Ver
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="eliminarDocumento('${doc.id}')">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </td>
+                `;
+                tablaDocumentos.appendChild(row);
+            });
+        }
+        
+        // Función para mostrar detalles del documento
+        function mostrarDetalles(docId) {
+            const documento = documentos.find(doc => doc.id === docId);
+            if (!documento) return;
+            
+            let contenido = `
+                <h4>${documento.name}</h4>
+                <p><strong>Tipo:</strong> ${getCategoryName(documento.category)}</p>
+                <p><strong>Ubicación:</strong> ${documento.ubicacion || 'biblioteca'}</p>
+                <p><strong>Fecha de carga:</strong> ${documento.date}</p>
+                <p><strong>Archivo:</strong> ${documento.fileName} (${formatFileSize(documento.size)})</p>
+                <hr>
+                <h5>Detalles específicos:</h5>
+            `;
+            
+            // Agregar detalles específicos según el tipo de documento
+            for (const [key, value] of Object.entries(documento.detalles)) {
+                if (value) {
+                    let valorMostrar = value;
+                    if (key === 'fecha' || key.includes('fecha')) {
+                        valorMostrar = new Date(value).toLocaleDateString();
+                    }
+                    contenido += `<p><strong>${key.charAt(0).toUpperCase() + key.slice(1)}:</strong> ${valorMostrar}</p>`;
+                }
+            }
+            
+            document.getElementById('detalle-documento').innerHTML = contenido;
+            
+            // Configurar botón de descarga
+            document.getElementById('descargarDocumento').onclick = function() {
+                // Simular descarga
+                alert(`Descargando documento: ${documento.fileName}`);
+            };
+            
+            const modal = new bootstrap.Modal(document.getElementById('detalleDocumentoModal'));
+            modal.show();
+        }
+        
+        // Función para eliminar documento
+        function eliminarDocumento(docId) {
+            if (confirm('¿Está seguro que desea eliminar este documento?')) {
+                documentos = documentos.filter(doc => doc.id !== docId);
+                updateStats();
+                loadRecentDocuments();
+                loadAllDocuments();
+                
+                // Crear notificación de eliminación
+                const nuevaNotificacion = {
+                    id: 'notif-' + Date.now(),
+                    tipo: 'eliminacion',
+                    mensaje: `Documento eliminado de la biblioteca`,
+                    fecha: new Date().toISOString(),
+                    leida: false
+                };
+                
+                notificaciones.unshift(nuevaNotificacion);
+                actualizarContadorNotificaciones();
+                
+                alert('Documento eliminado correctamente');
+            }
+        }
+        
+        // Función para actualizar el contador de notificaciones
+        function actualizarContadorNotificaciones() {
+            const noLeidas = notificaciones.filter(notif => !notif.leida).length;
+            document.getElementById('notificationCounter').textContent = noLeidas;
+            document.getElementById('notificationCounter').style.display = noLeidas > 0 ? 'flex' : 'none';
+        }
+        
+        // Función para mostrar notificaciones
+        function mostrarNotificaciones() {
+            const notificacionesContenido = document.getElementById('notificacionesContenido');
+            notificacionesContenido.innerHTML = '';
+            
+            if (notificaciones.length === 0) {
+                notificacionesContenido.innerHTML = '<p class="text-center text-muted">No hay notificaciones</p>';
+                return;
+            }
+            
+            notificaciones.forEach(notif => {
+                const notifElement = document.createElement('div');
+                notifElement.className = `notification-item ${notif.leida ? '' : 'unread'}`;
+                
+                let icono = 'bi-info-circle';
+                let color = 'text-primary';
+                
+                if (notif.tipo === 'documento') {
+                    icono = 'bi-file-earmark-arrow-up';
+                    color = 'text-success';
+                } else if (notif.tipo === 'eliminacion') {
+                    icono = 'bi-trash';
+                    color = 'text-danger';
+                }
+                
+                notifElement.innerHTML = `
+                    <div class="d-flex">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="bi ${icono} ${color} fs-4"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-1">${notif.mensaje}</p>
+                            <p class="notification-time mb-0">
+                                <i class="bi bi-clock"></i> ${new Date(notif.fecha).toLocaleString()}
+                            </p>
+                        </div>
+                    </div>
+                `;
+                
+                notifElement.addEventListener('click', () => {
+                    // Marcar como leída
+                    notif.leida = true;
+                    actualizarContadorNotificaciones();
+                    notifElement.classList.remove('unread');
+                    
+                    // Si es un documento, mostrar detalles
+                    if (notif.documentoId) {
+                        const modalNotificaciones = bootstrap.Modal.getInstance(document.getElementById('notificacionesModal'));
+                        modalNotificaciones.hide();
+                        
+                        mostrarDetalles(notif.documentoId);
+                    }
+                });
+                
+                notificacionesContenido.appendChild(notifElement);
+            });
+            
+            const modal = new bootstrap.Modal(document.getElementById('notificacionesModal'));
+            modal.show();
+        }
+        
+        // Función para obtener nombre de categoría
+        function getCategoryName(category) {
+            const categories = {
+                'contrato': 'Contrato',
+                'poder': 'Poder',
+                'acta': 'Acta',
+                'anexo': 'Anexo',
+                'biblioteca': 'Biblioteca',
+                'identificacion': 'Documento de Identificación',
+                'reporte': 'Reporte',
+                'pagar': 'Pagaré',
+                'financiero': 'Documento Financiero',
+                'otro': 'Otro documento'
+            };
+            return categories[category] || 'Otro documento';
+        }
+        
+        // Función para formatear tamaño de archivo
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+    </script>
+    <script src="ruta/a/tu/archivo/form-validation.js"></script>
+</body>
+</html>

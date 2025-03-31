@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/estilos.css">
+    <title>MichiganCFI - Perfil</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Menú lateral izquierdo (igual que en index.html) -->
+            <aside class="menu-lateral col-md-3 col-lg-2 d-md-block bg-dark">
+                <div class="logo text-center py-3">
+                    <a href="index.html" class="text-white text-decoration-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-bootstrap-fill" viewBox="0 0 16 16">
+                            <path d="M6.375 7.125V4.658h1.78c.973 0 1.542.457 1.542 1.237 0 .802-.604 1.23-1.764 1.23H6.375zm0 3.762h1.898c1.184 0 1.81-.48 1.81-1.377 0-.885-.65-1.348-1.886-1.348H6.375v2.725z"/>
+                            <path d="M4.002 0a4 4 0 0 0-4 4v8a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4V4a4 4 0 0 0-4-4h-8zm1.06 12V3.545h3.399c1.587 0 2.543.809 2.543 2.11 0 .884-.65 1.675-1.483 1.816v.1c1.143.117 1.904.931 1.904 2.033 0 1.488-1.084 2.396-2.888 2.396H5.062z"/>
+                        </svg>
+                        <span class="ms-2">MichiganCFI</span>
+                    </a>
+                </div>
+                
+                <nav class="nav flex-column px-3">
+                    <a href="dashboard.html" class="nav-link text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-speedometer2 me-2" viewBox="0 0 16 16">
+                            <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4zM3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.389.389 0 0 0-.029-.518z"/>
+                            <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A7.988 7.988 0 0 1 0 10zm8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3z"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <!-- Otros elementos del menú -->
+                    <a href="perfil.html" class="nav-link text-white active">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person me-2" viewBox="0 0 16 16">
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                        </svg>
+                        Perfil
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Contenido principal -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Mi Perfil</h1>
+                </div>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <!-- Foto de perfil -->
+                            <div class="card mb-4">
+                                <div class="card-body text-center">
+                                    <div class="profile-pic-container mb-3">
+                                        <img src="img/avatar-placeholder.png" id="profile-pic" class="rounded-circle" width="150" height="150" alt="Foto de perfil">
+                                        <div class="upload-overlay">
+                                            <label for="file-upload" class="btn btn-sm btn-primary">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera" viewBox="0 0 16 16">
+                                                    <path d="M15 12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h1.172a3 3 0 0 0 2.12-.879l.83-.828A1 1 0 0 1 6.827 3h2.344a1 1 0 0 1 .707.293l.828.828A3 3 0 0 0 12.828 5H14a1 1 0 0 1 1 1v6zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z"/>
+                                                    <path d="M8 11a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
+                                                </svg>
+                                                Cambiar foto
+                                            </label>
+                                            <input id="file-upload" type="file" accept="image/*" style="display: none;">
+                                        </div>
+                                    </div>
+                                    <h5 id="nombre-completo" class="mb-1">Nombre Apellido</h5>
+                                    <p id="puesto" class="text-muted mb-3">Puesto del usuario</p>
+                                    <button class="btn btn-primary btn-sm" id="save-profile">Guardar cambios</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <!-- Información del perfil -->
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h5 class="card-title">Información Personal</h5>
+                                    <form id="profile-form">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="nombre" class="form-label">Nombre(s)</label>
+                                                <input type="text" class="form-control" id="nombre" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="apellidos" class="form-label">Apellidos</label>
+                                                <input type="text" class="form-control" id="apellidos" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Correo electrónico</label>
+                                            <input type="email" class="form-control" id="email" required>
+                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="puesto-input" class="form-label">Puesto</label>
+                                                <input type="text" class="form-control" id="puesto-input">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="telefono" class="form-label">Teléfono/Extensión</label>
+                                                <input type="tel" class="form-control" id="telefono">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="departamento" class="form-label">Departamento</label>
+                                            <select class="form-select" id="departamento">
+                                                <option selected>Seleccionar...</option>
+                                                <option>Administración</option>
+                                                <option>Académico</option>
+                                                <option>Recursos Humanos</option>
+                                                <option>Tecnologías de la Información</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Función para cargar los datos del usuario
+        function cargarDatosUsuario() {
+            // Aquí normalmente harías una petición AJAX para obtener los datos del usuario
+            // Por ahora usaremos datos de ejemplo
+            const usuario = {
+                nombre: "Juan",
+                apellidos: "Pérez López",
+                email: "juan.perez@michigancfi.edu",
+                puesto: "Instructor Principal",
+                telefono: "555-1234 ext. 567",
+                departamento: "Académico",
+                foto: "img/persona2.jpg"
+            };
+
+            // Llenar los campos con los datos del usuario
+            document.getElementById('nombre').value = usuario.nombre;
+            document.getElementById('apellidos').value = usuario.apellidos;
+            document.getElementById('email').value = usuario.email;
+            document.getElementById('puesto-input').value = usuario.puesto;
+            document.getElementById('telefono').value = usuario.telefono;
+            document.getElementById('departamento').value = usuario.departamento;
+            document.getElementById('nombre-completo').textContent = usuario.nombre + ' ' + usuario.apellidos;
+            document.getElementById('puesto').textContent = usuario.puesto;
+            
+            if(usuario.foto) {
+                document.getElementById('profile-pic').src = usuario.foto;
+            }
+        }
+
+        // Función para manejar la subida de la foto de perfil
+        document.getElementById('file-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('profile-pic').src = event.target.result;
+                    // Aquí normalmente enviarías la imagen al servidor
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Función para guardar los cambios del perfil
+        document.getElementById('save-profile').addEventListener('click', function() {
+            // Aquí iría el código para enviar los datos al servidor
+            alert('Perfil actualizado correctamente');
+            
+            // Actualizar la vista con los nuevos datos
+            const nombre = document.getElementById('nombre').value;
+            const apellidos = document.getElementById('apellidos').value;
+            const puesto = document.getElementById('puesto-input').value;
+            
+            document.getElementById('nombre-completo').textContent = nombre + ' ' + apellidos;
+            document.getElementById('puesto').textContent = puesto;
+        });
+
+        // Cargar los datos del usuario cuando la página se cargue
+        window.onload = cargarDatosUsuario;
+    </script>
+</body>
+</html>

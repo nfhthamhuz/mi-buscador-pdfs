@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración de Contratos</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <style>
+        /* Estilos personalizados */
+        .navbar-custom {
+            background-color: #007bff;
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: white !important;
+        }
+        .sidebar {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .footer {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .search-match {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        .pdf-preview {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .pdf-viewer-container {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        #pdf-viewer {
+            width: 100%;
+            height: 100%;
+        }
+        .file-input-container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Administración de Contratos</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Contratos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Perfil</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenedor principal -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 sidebar">
+                <h4>Menú</h4>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a href="#" class="text-decoration-none">Todos los contactos</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#" class="text-decoration-none">Contactos vigentes</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#" class="text-decoration-none">Contactos vencidos</a>
+                    </li>
+                </ul>
+                
+                <div class="file-input-container mt-4">
+                    <h5>Cargar PDFs</h5>
+                    <input type="file" id="pdf-upload" class="form-control" accept=".pdf" multiple>
+                    <button id="btn-cargar" class="btn btn-primary mt-2">Cargar documentos</button>
+                </div>
+                
+                <div class="mt-4">
+                    <h5>Documentos cargados</h5>
+                    <ul id="lista-documentos" class="list-group">
+                        <!-- Aquí se listarán los PDFs cargados -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contenido principal -->
+            <div class="col-md-9 main-content">
+                <h1>Administración de Contratos</h1>
+
+                <!-- Buscador -->
+                <div class="mb-4">
+                    <div class="input-group">
+                        <input type="text" id="input-buscar" class="form-control" placeholder="Buscar contratos...">
+                        <button id="boton-buscar" class="btn btn-primary">Buscar</button>
+                    </div>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" id="buscar-en-contenido" checked>
+                        <label class="form-check-label" for="buscar-en-contenido">
+                            Buscar en contenido de PDF
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Resultados de búsqueda -->
+                <div class="mb-4">
+                    <h2>Resultados</h2>
+                    <div id="loading" class="d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <span class="ms-2">Buscando en documentos...</span>
+                    </div>
+                    <ul id="lista-resultados" class="list-group">
+                        <!-- Los resultados se cargarán aquí dinámicamente -->
+                    </ul>
+                </div>
+
+                <!-- Visor de PDF -->
+                <div class="pdf-viewer-container">
+                    <h2>Vista previa del documento</h2>
+                    <canvas id="pdf-viewer"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Administración de Contratos. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Configurar PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+        
+        // Array para almacenar los PDFs cargados
+        let documentosCargados = [];
+        
+        // Variables para el visor de PDF
+        let pdfDoc = null;
+        let pageNum = 1;
+        let pageRendering = false;
+        let pageNumPending = null;
+        let scale = 1.5;
+        
+        // Elementos del DOM
+        const pdfUpload = document.getElementById('pdf-upload');
+        const btnCargar = document.getElementById('btn-cargar');
+        const listaDocumentos = document.getElementById('lista-documentos');
+        const pdfViewer = document.getElementById('pdf-viewer');
+        
+        // Función para renderizar una página del PDF
+        function renderPage(num) {
+            pageRendering = true;
+            
+            pdfDoc.getPage(num).then(function(page) {
+                const viewport = page.getViewport({ scale: scale });
+                pdfViewer.height = viewport.height;
+                pdfViewer.width = viewport.width;
+                
+                const renderContext = {
+                    canvasContext: pdfViewer.getContext('2d'),
+                    viewport: viewport
+                };
+                
+                const renderTask = page.render(renderContext);
+                
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+                });
+            });
+        }
+        
+        // Función para cargar y mostrar un PDF
+        function cargarPDF(url, nombre) {
+            pdfjsLib.getDocument(url).promise.then(function(pdf) {
+                pdfDoc = pdf;
+                pageNum = 1;
+                renderPage(pageNum);
+                
+                // Actualizar la interfaz
+                document.querySelector('.pdf-viewer-container h2').textContent = `Vista previa: ${nombre}`;
+            }).catch(function(error) {
+                console.error('Error al cargar PDF:', error);
+                alert('Error al cargar el PDF');
+            });
+        }
+        
+        // Función para extraer texto de un PDF
+        async function extractTextFromPDF(pdfFile) {
+            try {
+                const arrayBuffer = await readFileAsArrayBuffer(pdfFile);
+                const loadingTask = pdfjsLib.getDocument(arrayBuffer);
+                const pdf = await loadingTask.promise;
+                let fullText = '';
+                
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const text = textContent.items.map(item => item.str).join(' ');
+                    fullText += text + '\n';
+                }
+                
+                return fullText;
+            } catch (error) {
+                console.error('Error al procesar PDF:', error);
+                return '';
+            }
+        }
+        
+        // Función para leer un archivo como ArrayBuffer
+        function readFileAsArrayBuffer(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
+            });
+        }
+        
+        // Función para resaltar texto
+        function highlightText(text, searchTerm) {
+            if (!searchTerm) return text;
+            
+            const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
+            return text.replace(regex, '<span class="search-match">$1</span>');
+        }
+        
+        // Función para escapar caracteres especiales en regex
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+        
+        // Evento para cargar documentos
+        btnCargar.addEventListener('click', async function() {
+            const files = pdfUpload.files;
+            if (files.length === 0) {
+                alert('Por favor selecciona al menos un archivo PDF');
+                return;
+            }
+            
+            document.getElementById('loading').classList.remove('d-none');
+            listaDocumentos.innerHTML = '';
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const contenido = await extractTextFromPDF(file);
+                
+                const documento = {
+                    nombre: file.name,
+                    archivo: file,
+                    contenido: contenido,
+                    url: URL.createObjectURL(file)
+                };
+                
+                documentosCargados.push(documento);
+                
+                // Agregar a la lista de documentos
+                const item = document.createElement('li');
+                item.className = 'list-group-item d-flex justify-content-between align-items-center';
+                item.innerHTML = `
+                    ${file.name}
+                    <button class="btn btn-sm btn-outline-primary ver-documento" data-index="${documentosCargados.length - 1}">
+                        Ver
+                    </button>
+                `;
+                listaDocumentos.appendChild(item);
+            }
+            
+            document.getElementById('loading').classList.add('d-none');
+            alert(`${files.length} documento(s) cargado(s) correctamente`);
+            
+            // Si solo hay un documento, mostrarlo automáticamente
+            if (files.length === 1) {
+                cargarPDF(documentosCargados[0].url, documentosCargados[0].nombre);
+            }
+        });
+        
+        // Evento delegado para los botones de ver documento
+        listaDocumentos.addEventListener('click', function(e) {
+            if (e.target.classList.contains('ver-documento')) {
+                const index = e.target.getAttribute('data-index');
+                const documento = documentosCargados[index];
+                cargarPDF(documento.url, documento.nombre);
+            }
+        });
+        
+        // Función para mostrar resultados de búsqueda
+        async function mostrarResultados(termino) {
+            const listaResultados = document.getElementById('lista-resultados');
+            listaResultados.innerHTML = '';
+            const buscarEnContenido = document.getElementById('buscar-en-contenido').checked;
+            
+            if (!termino) {
+                listaResultados.innerHTML = "<li class='list-group-item'>Ingrese un término de búsqueda.</li>";
+                return;
+            }
+            
+            if (documentosCargados.length === 0) {
+                listaResultados.innerHTML = "<li class='list-group-item'>No hay documentos cargados. Por favor carga algunos PDFs primero.</li>";
+                return;
+            }
+            
+            document.getElementById('loading').classList.remove('d-none');
+            
+            let resultados = [];
+            
+            for (const documento of documentosCargados) {
+                const nombreMatch = documento.nombre.toLowerCase().includes(termino.toLowerCase());
+                let contenidoMatch = false;
+                let snippet = '';
+                
+                if (buscarEnContenido) {
+                    contenidoMatch = documento.contenido.toLowerCase().includes(termino.toLowerCase());
+                    
+                    if (contenidoMatch) {
+                        const contenido = documento.contenido || '';
+                        const index = contenido.toLowerCase().indexOf(termino.toLowerCase());
+                        const snippetStart = Math.max(0, index - 50);
+                        const snippetEnd = Math.min(contenido.length, index + termino.length + 50);
+                        snippet = contenido.substring(snippetStart, snippetEnd);
+                        
+                        if (snippetStart > 0) snippet = "..." + snippet;
+                        if (snippetEnd < contenido.length) snippet = snippet + "...";
+                    }
+                }
+                
+                if (nombreMatch || (buscarEnContenido && contenidoMatch)) {
+                    resultados.push({
+                        documento,
+                        nombreMatch,
+                        contenidoMatch,
+                        snippet
+                    });
+                }
+            }
+            
+            document.getElementById('loading').classList.add('d-none');
+            
+            if (resultados.length === 0) {
+                listaResultados.innerHTML = "<li class='list-group-item'>No se encontraron resultados.</li>";
+            } else {
+                resultados.forEach(resultado => {
+                    const item = document.createElement('li');
+                    item.className = 'list-group-item';
+                    
+                    let contenidoHTML = `
+                        <div class="fw-bold">${highlightText(resultado.documento.nombre, termino)}</div>
+                    `;
+                    
+                    if (buscarEnContenido && resultado.contenidoMatch) {
+                        snippet = highlightText(resultado.snippet, termino);
+                        
+                        contenidoHTML += `
+                            <div class="pdf-preview mt-2">
+                                <small>${snippet}</small>
+                            </div>
+                        `;
+                    }
+                    
+                    contenidoHTML += `
+                        <button class="btn btn-sm btn-primary mt-2 ver-resultado" data-url="${resultado.documento.url}" data-nombre="${resultado.documento.nombre}">
+                            Ver documento
+                        </button>
+                    `;
+                    
+                    item.innerHTML = contenidoHTML;
+                    listaResultados.appendChild(item);
+                });
+            }
+        }
+        
+        // Evento delegado para los botones de ver resultado
+        listaResultados.addEventListener('click', function(e) {
+            if (e.target.classList.contains('ver-resultado')) {
+                const url = e.target.getAttribute('data-url');
+                const nombre = e.target.getAttribute('data-nombre');
+                cargarPDF(url, nombre);
+            }
+        });
+        
+        // Evento de búsqueda
+        document.getElementById('boton-buscar').addEventListener('click', () => {
+            const termino = document.getElementById('input-buscar').value;
+            mostrarResultados(termino);
+        });
+        
+        // Permitir búsqueda al presionar Enter
+        document.getElementById('input-buscar').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const termino = document.getElementById('input-buscar').value;
+                mostrarResultados(termino);
+            }
+        });
+    </script>
+</body>
+</html>

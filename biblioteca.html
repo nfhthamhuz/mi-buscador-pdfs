@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca de Documentos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/biblioteca.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Barra superior -->
+        <div class="row bg-primary text-white p-3">
+            <div class="col-md-6">
+                <h1><i class="bi bi-collection"></i> Biblioteca</h1>
+            </div>
+            <div class="col-md-6 text-end">
+                <button class="btn btn-light btn-sm me-2" id="btnNewFolder">
+                    <i class="bi bi-folder-plus"></i> Nueva Carpeta
+                </button>
+                <button class="btn btn-light btn-sm" id="btnUpload">
+                    <i class="bi bi-upload"></i> Subir Archivo
+                </button>
+            </div>
+        </div>
+
+        <!-- Ruta actual -->
+        <div class="row bg-light py-2">
+            <div class="col-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0" id="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" data-path="/">Biblioteca</a></li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Buscador -->
+        <div class="row p-3">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Buscar documentos...">
+                    <button class="btn btn-primary" id="btnSearch">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-6 text-end">
+                <select class="form-select w-auto d-inline-block" id="sortSelect">
+                    <option value="name">Ordenar por nombre</option>
+                    <option value="date">Ordenar por fecha</option>
+                    <option value="type">Ordenar por tipo</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Contenido -->
+        <div class="row p-3">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th width="50px"></th>
+                                <th>Nombre</th>
+                                <th>Tamaño</th>
+                                <th>Modificado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fileList">
+                            <!-- Aquí se cargarán los archivos dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Nueva Carpeta -->
+        <div class="modal fade" id="newFolderModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Nueva Carpeta</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" id="folderName" placeholder="Nombre de la carpeta">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="btnCreateFolder">Crear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Subir Archivo -->
+        <div class="modal fade" id="uploadModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Subir Archivo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="file" class="form-control" id="fileUpload" multiple>
+                        <div class="progress mt-3 d-none" id="uploadProgress">
+                            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="btnUploadFile">Subir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/biblioteca.js"></script>
+</body>
+</html>
